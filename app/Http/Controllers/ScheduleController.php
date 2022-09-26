@@ -6,8 +6,11 @@ use App\DataTables\ScheduleDataTable;
 use App\Models\Schedule;
 use App\Http\Requests\StoreScheduleRequest;
 use App\Http\Requests\UpdateScheduleRequest;
+use App\Models\Attendance;
 use App\Models\Employee;
 use App\Models\Shift;
+use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request as Req;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 
@@ -55,14 +58,32 @@ class ScheduleController extends Controller
                         'error' => $validator->errors()->all()
                     ]);
         }
-       
-        $employee=Schedule::updateOrCreate([
-            'id' => $request->id
-           ],[
-            'dates' => $request->dates,
-            'employees_id' => $request->employees,
-            'shifts_id' => $request->shifts,
-        ]);
+        for($count = 0; $count < count($request->dates); $count++)
+        {
+            $employee=Schedule::updateOrCreate([
+                'id' => $request->id
+               ],[
+                'dates' => $request->dates[$count],
+                'employees_id' => $request->employees,
+                'shifts_id' => $request->shifts[$count],
+            ]);
+            $lastinsert=$employee->id;
+            if($lastinsert==$request->id){
+                
+            }else{
+                $attendance=Attendance::updateOrCreate([
+                    'id' => $request->id
+                   ],[
+                    'schedules_id' => $lastinsert,
+                    'employees_id' => $request->employees,
+                    'at_in' => "00:00",
+                    'at_out' => "00:00",
+                    'status' => "Belum Masuk",
+                    'lembur' => 0,
+                ]);
+            }
+            
+        }
         //return view('layouts.employees.index',['success' => 'Post created successfully.']);
         return response()->json($employee);
     }
@@ -110,10 +131,10 @@ class ScheduleController extends Controller
      * @param  \App\Models\Schedule  $schedule
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Schedule $schedule)
+    public function destroy(Req $schedule)
     {
-        $company = Schedule::where('id',$schedule->id)->delete();
-      
+
+        $company = Schedule::where('id','=',$schedule->id)->delete();
         return Response()->json($company);
     }
 }

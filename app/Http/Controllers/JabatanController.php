@@ -7,6 +7,7 @@ use App\Models\Jabatan;
 use App\Http\Requests\StoreJabatanRequest;
 use App\Http\Requests\UpdateJabatanRequest;
 use Illuminate\Auth\Events\Validated;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class JabatanController extends Controller
@@ -77,7 +78,7 @@ class JabatanController extends Controller
      * @param  \App\Models\Jabatan  $jabatan
      * @return \Illuminate\Http\Response
      */
-    public function edit(Jabatan $jabatan)
+    public function edit(Request $jabatan)
     {
         $where = array('id' => $jabatan->id);
         $company  = Jabatan::where($where)->first();
@@ -103,7 +104,7 @@ class JabatanController extends Controller
      * @param  \App\Models\Jabatan  $jabatan
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Jabatan $jabatan)
+    public function destroy(Request $jabatan)
     {
         $company = Jabatan::where('id',$jabatan->id)->delete();
       

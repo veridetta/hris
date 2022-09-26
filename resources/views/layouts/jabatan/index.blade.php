@@ -63,9 +63,6 @@
 @endsection
 
 @push('js')
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.0.3/css/buttons.dataTables.min.css">
-<script src="https://cdn.datatables.net/buttons/1.0.3/js/dataTables.buttons.min.js"></script>
-<script src="https://raw.githubusercontent.com/veridetta/hris/master/cdn_button.js"></script>
 {!! $dataTable->scripts() !!}
 <script type="text/javascript">
   $.ajaxSetup({
@@ -104,8 +101,7 @@
         data: { id: id },
         dataType: 'json',
         success: function(res){
-        var oTable = $('#user_datatable').dataTable();
-        oTable.fnDraw(false);
+         $('.buttons-reload').trigger('click');
         }
       });
     }
@@ -121,8 +117,7 @@
          data:{id:id, jabatan:jabatan},
          success:function(data){
           $("#tambahModal").modal('hide');
-          var oTable = $('#user_datatable').dataTable();
-          oTable.fnDraw(false);
+          $('.buttons-reload').trigger('click');
           },
             error: function(data){
             console.log(data);

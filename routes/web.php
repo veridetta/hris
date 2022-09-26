@@ -22,7 +22,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('/clear-cache-all', function() {
+    Artisan::call('cache:clear');
+  
+    dd("Cache Clear All");
+});
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Auth::routes();
@@ -59,6 +63,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('schedule_store', 'App\Http\Controllers\ScheduleController@store')->name('schedule_store');
 	Route::post('schedule_edit', [ScheduleController::class, 'edit'])->name('schedule_edit');;
 	Route::post('schedule_delete', [ScheduleController::class, 'destroy'])->name('schedule_delete');
+	//ATTENDANCE
+	Route::get('attendance', 'App\Http\Controllers\AttendanceController@index')->name('attendance');
 	//
 	 Route::get('table-list', function () {return view('pages.tables');})->name('table');
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);

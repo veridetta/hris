@@ -49,7 +49,6 @@ class ShiftDataTable extends DataTable
                     ->dom('Bfrtip')
                     ->orderBy(1)
                     ->buttons(
-                        Button::make('create'),
                         Button::make('export'),
                         Button::make('print'),
                         Button::make('reset'),
@@ -66,6 +65,7 @@ class ShiftDataTable extends DataTable
     {
         return [
             Column::make('id'),
+            Column::make('shift_name'),
             Column::make('in'),
             Column::make('out'),
             Column::make('late'),

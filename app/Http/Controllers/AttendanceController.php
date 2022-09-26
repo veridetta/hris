@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\AttendanceDataTable;
 use App\Models\Attendance;
 use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\UpdateAttendanceRequest;
+use Attribute;
+use Illuminate\Support\Facades\Validator;
 
 class AttendanceController extends Controller
 {
@@ -13,9 +16,10 @@ class AttendanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(AttendanceDataTable $dataTable)
     {
-        //
+        
+        return $dataTable->render('layouts.attendances.index');
     }
 
     /**
@@ -36,7 +40,34 @@ class AttendanceController extends Controller
      */
     public function store(StoreAttendanceRequest $request)
     {
-        //
+        auth()->user();
+        $validator = Validator::make($request->all(), [
+            'employees' => 'required',
+            'schedules' => 'required',
+            'at_in' => 'required',
+            'at_out' => 'required',
+            'status' => 'required',
+            'lembur' => 'required',
+        ]);
+  
+        if ($validator->fails()) {
+            return response()->json([
+                        'error' => $validator->errors()->all()
+                    ]);
+        }
+       
+        $employee=Attendance::updateOrCreate([
+            'id' => $request->id
+           ],[
+            'employees_id' => $request->employees,
+            'schedules_id' => $request->schedules,
+            'at_in' => $request->at_in,
+            'at_out' => $request->at_out,
+            'status' => $request->status,
+            'lembur' => $request->lembur,
+        ]);
+        //return view('layouts.employees.index',['success' => 'Post created successfully.']);
+        return response()->json($employee);
     }
 
     /**
@@ -58,7 +89,10 @@ class AttendanceController extends Controller
      */
     public function edit(Attendance $attendance)
     {
-        //
+        $where = array('id' => $attendance->id);
+        $company  = Attendance::where($where)->first();
+      
+        return Response()->json($company);
     }
 
     /**
@@ -81,6 +115,8 @@ class AttendanceController extends Controller
      */
     public function destroy(Attendance $attendance)
     {
-        //
+        $company = Attendance::where('id',$attendance->id)->delete();
+      
+        return Response()->json($company);
     }
 }

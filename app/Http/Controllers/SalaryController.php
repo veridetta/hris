@@ -7,7 +7,9 @@ use App\Models\Salary;
 use App\Http\Requests\StoreSalaryRequest;
 use App\Http\Requests\UpdateSalaryRequest;
 use App\Models\Jabatan;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+
 
 class SalaryController extends Controller
 {
@@ -85,7 +87,7 @@ class SalaryController extends Controller
      * @param  \App\Models\Salary  $salary
      * @return \Illuminate\Http\Response
      */
-    public function edit(Salary $salary)
+    public function edit(Request $salary)
     {
         $where = array('id' => $salary->id);
         $company  = Salary::where($where)->first();
@@ -111,7 +113,7 @@ class SalaryController extends Controller
      * @param  \App\Models\Salary  $salary
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Salary $salary)
+    public function destroy(Request $salary)
     {
         $company = Salary::where('id',$salary->id)->delete();
       

@@ -6,6 +6,7 @@ use App\DataTables\ShiftDataTable;
 use App\Models\Shift;
 use App\Http\Requests\StoreShiftRequest;
 use App\Http\Requests\UpdateShiftRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ShiftController extends Controller
@@ -42,7 +43,8 @@ class ShiftController extends Controller
         $validator = Validator::make($request->all(), [
             'in' => 'required',
             'out' => 'required',
-            'late' => 'required'
+            'late' => 'required',
+            'shift_name' => 'required'
         ]);
   
         if ($validator->fails()) {
@@ -57,6 +59,7 @@ class ShiftController extends Controller
             'in' => $request->in,
             'out' => $request->out,
             'late' => $request->late,
+            'shift_name' => $request->shift_name,
         ]);
         //return view('layouts.employees.index',['success' => 'Post created successfully.']);
         return response()->json($employee);
@@ -79,7 +82,7 @@ class ShiftController extends Controller
      * @param  \App\Models\Shift  $shift
      * @return \Illuminate\Http\Response
      */
-    public function edit(Shift $shift)
+    public function edit(Request $shift)
     {
         $where = array('id' => $shift->id);
         $company  = Shift::where($where)->first();
@@ -105,7 +108,7 @@ class ShiftController extends Controller
      * @param  \App\Models\Shift  $shift
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Shift $shift)
+    public function destroy(Request $shift)
     {
         $company = Shift::where('id',$shift->id)->delete();
       

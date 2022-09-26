@@ -33,7 +33,7 @@ class SalaryDataTable extends DataTable
     public function query(Salary $model)
     {
         //return $model->newQuery();
-        $data = Salary::select()->join('jabatans', 'jabatans.id', '=', 'salaries.jabatan_id');
+        $data = Salary::select('salaries.*','jabatans.jabatan')->join('jabatans', 'jabatans.id', '=', 'salaries.jabatan_id');
         return $this->applyScopes($data);
     }
 
@@ -51,7 +51,7 @@ class SalaryDataTable extends DataTable
                     ->dom('Bfrtip')
                     ->orderBy(1)
                     ->buttons(
-                        Button::make('create'),
+                        
                         Button::make('export'),
                         Button::make('print'),
                         Button::make('reset'),

@@ -44,8 +44,10 @@
                 <div class="alert alert-danger print-error-msg" style="display:none">
                   <ul></ul>
                 </div>
-      
-      
+                <div class="mb-3">
+                  <label for="shift_name" class="form-label">Nama Shift:</label>
+                  <input type="text" id="shift_name" name="shift_name" class="form-control" placeholder="Kode/nama" required="">
+                </div>
                 <div class="mb-3">
                     <label for="in" class="form-label">Masuk:</label>
                     <input type="time" id="in" name="in" class="form-control" placeholder="Masuk" required="">
@@ -57,7 +59,7 @@
               </div>
                 <div class="mb-3">
                   <label for="late" class="form-label">Toleransi Keterlambatan:</label>
-                  <input type="time" id="late" name="late" class="form-control" placeholder="Menit" required="">
+                  <input type="number" id="late" name="late" class="form-control" placeholder="Menit" required="">
                 </div>
               </div>
               <div class="modal-footer">
@@ -103,6 +105,7 @@
         $('#in').val(res.in);
         $('#out').val(res.out);
         $('#late').val(res.late);
+        $('#shift_name').val(res.shift_name);
         
       }
     });
@@ -117,8 +120,7 @@
         data: { id: id },
         dataType: 'json',
         success: function(res){
-        var oTable = $('#user_datatable').dataTable();
-        oTable.fnDraw(false);
+          $('.buttons-reload').trigger('click');
         }
       });
     }
@@ -130,15 +132,15 @@
       var masuk = $("#in").val();
       var out = $("#out").val();
       var late = $("#late").val();
+      var shift_name = $("#shift_name").val();
       
       $.ajax({
          type:'POST',
          url:"{{ url('shift_store') }}",
-         data:{id:id, in:masuk, out:out, late:late},
+         data:{id:id, in:masuk, out:out, late:late,shift_name:shift_name},
          success:function(data){
           $("#tambahModal").modal('hide');
-          var oTable = $('#user_datatable').dataTable();
-          oTable.fnDraw(false);
+          $('.buttons-reload').trigger('click');
           },
             error: function(data){
             console.log(data);

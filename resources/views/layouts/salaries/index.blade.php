@@ -109,7 +109,7 @@
         $('#tambahModal').modal('show');
         url_ajax="{{ url('salary_edit') }}";
         $('#id').val(res.id);
-        $('#jabatan').val(res.jabatan);
+        $('#jabatan').val(res.jabatan_id);
         $('#salary').val(res.salary);
         $('#insentif').val(res.insentif);
         $('#lembur').val(res.lembur);
@@ -127,8 +127,7 @@
         data: { id: id },
         dataType: 'json',
         success: function(res){
-        var oTable = $('#user_datatable').dataTable();
-        oTable.fnDraw(false);
+          $('.buttons-reload').trigger('click');
         }
       });
     }
@@ -148,8 +147,7 @@
          data:{id:id, salary:salary, insentif:insentif,lembur:lembur,jabatan:jabatan,potongan:potongan},
          success:function(data){
           $("#tambahModal").modal('hide');
-          var oTable = $('#user_datatable').dataTable();
-          oTable.fnDraw(false);
+          $('.buttons-reload').trigger('click');
           },
             error: function(data){
             console.log(data);

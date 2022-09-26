@@ -32,4 +32,8 @@ class Employee extends Authenticatable
     {
         return $this->belongsTo(Schedule::class);
     }
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }

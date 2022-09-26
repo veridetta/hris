@@ -21,7 +21,7 @@ class AttendanceDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', 'attendance.action');
+            ->addColumn('action', 'layouts.attendances.action');
     }
 
     /**
@@ -32,7 +32,8 @@ class AttendanceDataTable extends DataTable
      */
     public function query(Attendance $model)
     {
-        return $model->newQuery();
+        $data = Attendance::select()->join('employees', 'employees.id', '=', 'attendances.employees_id')->join('schedules', 'schedules.id', '=', 'attendances.schedules_id')->where('status','!=','Belum Masuk') ;
+        return $this->applyScopes($data);
     }
 
     /**
@@ -49,7 +50,6 @@ class AttendanceDataTable extends DataTable
                     ->dom('Bfrtip')
                     ->orderBy(1)
                     ->buttons(
-                        Button::make('create'),
                         Button::make('export'),
                         Button::make('print'),
                         Button::make('reset'),
@@ -65,15 +65,18 @@ class AttendanceDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            
+            Column::make('id'),
+            Column::make('dates'),
+            Column::make('at_in'),
+            Column::make('at_out'),
+            Column::make('at_out'),
+            Column::make('lembur'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
                   ->width(60)
                   ->addClass('text-center'),
-            Column::make('id'),
-            Column::make('add your columns'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
         ];
     }
 
@@ -82,8 +85,4 @@ class AttendanceDataTable extends DataTable
      *
      * @return string
      */
-    protected function filename()
-    {
-        return 'Attendance_' . date('YmdHis');
-    }
 }

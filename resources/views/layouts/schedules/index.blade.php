@@ -90,9 +90,6 @@
 @endsection
 
 @push('js')
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.0.3/css/buttons.dataTables.min.css">
-<script src="https://cdn.datatables.net/buttons/1.0.3/js/dataTables.buttons.min.js"></script>
-<script src="https://raw.githubusercontent.com/veridetta/hris/master/cdn_button.js"></script>
 {!! $dataTable->scripts() !!}
 <script type="text/javascript">
   var max_fields = 26;
@@ -118,41 +115,35 @@
   });
   function add(){
     $('#PegawaiForm').trigger("reset");
-    $('#pegawaiTitle').html("Tambah Aturan");
+    $('#pegawaiTitle').html("Tambah Shift");
     $('#tambahModal').modal('show');
     $('#id').val('');
   }   
   function editFunc(id){
     $.ajax({
       type:"POST",
-      url: "{{ url('salary_edit') }}",
+      url: "{{ url('schedule_edit') }}",
       data: { id: id },
       dataType: 'json',
       success: function(res){
-        $('#pegawaiTitle').html("Ubah Aturan");
+        $('#pegawaiTitle').html("Ubah Shift");
         $('#tambahModal').modal('show');
-        url_ajax="{{ url('salary_edit') }}";
-        $('#id').val(res.id);
-        $('#jabatan').val(res.jabatan);
-        $('#salary').val(res.salary);
-        $('#insentif').val(res.insentif);
-        $('#lembur').val(res.lembur);
-        $('#potongan').val(res.potongan);
+        $('#id').val(id);
+        $('dates[0]').val(res.dates);
+        $('shifts[0]').val(res.shifts);
       }
     });
   }  
-  function deleteFunc(id){
+  function deleteFunc(idx){
     if (confirm("Delete Record?") == true) {
-      var id = id;
       // ajax
       $.ajax({
         type:"POST",
-        url: "{{ url('salary_delete') }}",
-        data: { id: id },
+        url: "{{ url('schedule_delete') }}",
+        data: { id: idx },
         dataType: 'json',
         success: function(res){
-        var oTable = $('#user_datatable').dataTable();
-        oTable.fnDraw(false);
+          $('.buttons-reload').trigger('click');
         }
       });
     }
@@ -160,20 +151,25 @@
   
   $("#btnSave").click(function(e){
       e.preventDefault();
-      var id = $("#id").val();
-      var jabatan = $("#jabatan").val();
-      var salary = $("#salary").val();
-      var insentif = $("#insentif").val();
-      var lembur = $("#lembur").val();
-      var potongan = $("#potongan").val();
+      var employees=$('#employees').val();
+      var id=$('#id').val();
+      var dates=[];
+      var shifts=[];
+      $("input[name^='dates']").each(function(){
+            dates.push(this.value);
+      });
+      $("select[name^='shifts'] > option:selected").each(function(){
+        shifts.push(this.value);
+      });
+    
       $.ajax({
          type:'POST',
-         url:"{{ url('salary_store') }}",
-         data:{id:id, salary:salary, insentif:insentif,lembur:lembur,jabatan:jabatan,potongan:potongan},
+         url:"{{ url('schedule_store') }}",
+         data: {id:id,dates:dates,shifts:shifts,employees:employees},
          success:function(data){
+          console.log(data);
           $("#tambahModal").modal('hide');
-          var oTable = $('#user_datatable').dataTable();
-          oTable.fnDraw(false);
+          $('.buttons-reload').trigger('click');
           },
             error: function(data){
             console.log(data);

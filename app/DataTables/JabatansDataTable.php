@@ -2,6 +2,7 @@
 
 namespace App\DataTables;
 
+use App\Exports\JabatansExport;
 use App\Models\Jabatan;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -9,8 +10,13 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
+
 class JabatansDataTable extends DataTable
 {
+    public function export() 
+    {
+        return Excel::download(new JabatansExport, 'jabatan.xlsx');
+    }
     /**
      * Build DataTable class.
      *
@@ -49,7 +55,7 @@ class JabatansDataTable extends DataTable
                     ->dom('Bfrtip')
                     ->orderBy(1)
                     ->buttons(
-                        Button::make('create'),
+                        
                         Button::make('export'),
                         Button::make('print'),
                         Button::make('reset'),
@@ -82,5 +88,4 @@ class JabatansDataTable extends DataTable
      *
      * @return string
      */
-    
 }

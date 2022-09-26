@@ -80,19 +80,19 @@
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('home') }}">
-                        <i class="ni ni-tv-2 text-primary"></i> {{ __('Dashboard') }}
+                        <i class="ni ni-tv-2 "></i> {{ __('Dashboard') }}
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item  {{ (request()->is('attendance')) ? 'active': ''}}">
                     <a class="nav-link" href="{{ route('attendance') }}">
-                        <i class="ni ni-tv-2 text-primary"></i> {{ __('Kehadiran') }}
+                        <i class="fa fa-user-check "></i> {{ __('Kehadiran') }}
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link @if ("no")
                         
                     @endif" href="#navbar-examples" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-examples">
-                        <i class="fab fa-laravel" style=""></i>
+                        <i class="fa fa-tasks" style=""></i>
                         <span class="nav-link-text" style="">{{ __('Management') }}</span>
                     </a>
 
@@ -100,17 +100,17 @@
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item  {{ (request()->is('employee')) ? 'active': ''}}">
                                 <a class="nav-link" href="{{ route('employee') }}">
-                                    {{ __('Pegawai') }}
+                                    <i class="fa fa-users"></i> {{ __('Pegawai') }}
                                 </a>
                             </li>
                             <li class="nav-item  {{ (request()->is('jabatan')) ? 'active': ''}}">
                                 <a class="nav-link" href="{{ route('jabatan') }}">
-                                    {{ __('Jabatan') }}
+                                    <i class="fa fa-user-plus" style=""></i>{{ __('Jabatan') }}
                                 </a>
                             </li>
                             <li class="nav-item  {{ (request()->is('salary')) ? 'active': ''}}">
                                 <a class="nav-link" href="{{ route('salary') }}">
-                                    {{ __('Gaji') }}
+                                    <i class="fa fa-wallet" style=""></i>{{ __('Gaji') }}
                                 </a>
                             </li>
                             
@@ -120,19 +120,19 @@
                 <li class="nav-item">
                     <a class="nav-link @if ("no")
                     @endif" href="#navbar-shift" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-shift">
-                        <i class="fab fa-laravel" style=""></i>
+                        <i class="fa fa-business-time" style=""></i>
                         <span class="nav-link-text" style="">{{ __('Pengaturan Shift') }}</span>
                     </a>
                     <div class="collapse" id="navbar-shift">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item  {{ (request()->is('shift')) ? 'active': ''}}">
                                 <a class="nav-link" href="{{ route('shift') }}">
-                                    {{ __('Shift') }}
+                                    <i class="fa fa-user-clock" style=""></i> {{ __('Shift') }}
                                 </a>
                             </li>
                             <li class="nav-item  {{ (request()->is('schedule')) ? 'active': ''}}">
                                 <a class="nav-link" href="{{ route('schedule') }}">
-                                    {{ __('Jadwal Shift') }}
+                                    <i class="fa fa-calendar" style=""></i>{{ __('Jadwal Shift') }}
                                 </a>
                             </li>
                         </ul>

@@ -32,7 +32,7 @@ class ScheduleDataTable extends DataTable
      */
     public function query(Schedule $model)
     {
-        $data = Schedule::select()->join('employees', 'employees.id', '=', 'schedules.employees_id')->join('shifts','shifts.id','=','schedules.shifts_id');
+        $data = Schedule::select('schedules.id AS ids','schedules.dates','shifts.*','employees.*')->join('employees', 'employees.id', '=', 'schedules.employees_id')->join('shifts','shifts.id','=','schedules.shifts_id');
         return $this->applyScopes($data);
     }
 
@@ -49,8 +49,7 @@ class ScheduleDataTable extends DataTable
                     ->minifiedAjax()
                     ->dom('Bfrtip')
                     ->orderBy(1)
-                    ->buttons(
-                        Button::make('create'),
+                    ->buttons(                        
                         Button::make('export'),
                         Button::make('print'),
                         Button::make('reset'),
@@ -66,7 +65,7 @@ class ScheduleDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('id'),
+            Column::make('ids'),
             Column::make('dates'),
             Column::make('in'),
             Column::make('out'),

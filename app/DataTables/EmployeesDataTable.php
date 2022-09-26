@@ -48,13 +48,14 @@ class EmployeesDataTable extends DataTable
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->orderBy(1)
-                    ->buttons([
-                        Button::make('csv'),
-                    ])
-                    ->parameters([
-                        
-                        'buttons' => ['reload'],
-                    ]);
+                    ->dom('Bfrtip')
+                    ->buttons(
+                    
+                        Button::make('export'),
+                        Button::make('print'),
+                        Button::make('reset'),
+                        Button::make('reload')
+                    );
     }
 
     /**
