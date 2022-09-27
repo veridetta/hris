@@ -6,7 +6,7 @@
         </button>
         <!-- Brand -->
         <a class="navbar-brand pt-0" href="{{ route('home') }}">
-            <img src="{{ asset('argon') }}/img/brand/blue.png" class="navbar-brand-img" alt="...">
+            <img src="{{ asset('images/'.$company->logo) }}" class="navbar-brand-img" alt="...">
         </a>
         <!-- User -->
         <ul class="nav align-items-center d-md-none">
@@ -91,12 +91,12 @@
                 <li class="nav-item">
                     <a class="nav-link @if ("no")
                         
-                    @endif" href="#navbar-examples" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-examples">
+                    @endif" href="#navbar-manage" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-manage">
                         <i class="fa fa-tasks" style=""></i>
                         <span class="nav-link-text" style="">{{ __('Management') }}</span>
                     </a>
 
-                    <div class="collapse show" id="navbar-examples">
+                    <div class="collapse" id="navbar-manage">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item  {{ (request()->is('employee')) ? 'active': ''}}">
                                 <a class="nav-link" href="{{ route('employee') }}">
@@ -137,6 +137,11 @@
                             </li>
                         </ul>
                     </div>
+                </li>
+                <li class="nav-item  {{ (request()->is('setting')) ? 'active': ''}}">
+                    <a class="nav-link" href="{{ route('setting') }}">
+                        <i class="fa fa-cog "></i> {{ __('Pengaturan') }}
+                    </a>
                 </li>
             </ul>
             <!-- Divider -->

@@ -6,6 +6,7 @@ use App\DataTables\ShiftDataTable;
 use App\Models\Shift;
 use App\Http\Requests\StoreShiftRequest;
 use App\Http\Requests\UpdateShiftRequest;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,7 +19,8 @@ class ShiftController extends Controller
      */
     public function index(ShiftDataTable $dataTable)
     {
-        return $dataTable->render('layouts.shifts.index');
+        $companies = Setting::first();
+        return $dataTable->render('layouts.shifts.index',['company'=>$companies]);
     }
 
     /**

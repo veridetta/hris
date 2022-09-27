@@ -6,6 +6,7 @@ use App\DataTables\JabatansDataTable;
 use App\Models\Jabatan;
 use App\Http\Requests\StoreJabatanRequest;
 use App\Http\Requests\UpdateJabatanRequest;
+use App\Models\Setting;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -19,8 +20,8 @@ class JabatanController extends Controller
      */
     public function index(JabatansDataTable $dataTable)
     {
-        //
-        return $dataTable->render('layouts.jabatan.index');
+        $companies = Setting::first();
+        return $dataTable->render('layouts.jabatan.index',['company'=>$companies]);
     }
 
     /**
@@ -107,7 +108,6 @@ class JabatanController extends Controller
     public function destroy(Request $jabatan)
     {
         $company = Jabatan::where('id',$jabatan->id)->delete();
-      
         return Response()->json($company);
     }
 }

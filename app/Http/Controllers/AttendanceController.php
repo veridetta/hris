@@ -6,6 +6,7 @@ use App\DataTables\AttendanceDataTable;
 use App\Models\Attendance;
 use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\UpdateAttendanceRequest;
+use App\Models\Setting;
 use Attribute;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,8 +19,8 @@ class AttendanceController extends Controller
      */
     public function index(AttendanceDataTable $dataTable)
     {
-        
-        return $dataTable->render('layouts.attendances.index');
+        $companies = Setting::first();
+        return $dataTable->render('layouts.attendances.index',['company'=>$companies]);
     }
 
     /**

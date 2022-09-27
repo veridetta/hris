@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Attendance;
+use App\Models\Employee;
 use App\Models\Schedule;
 use Carbon\Carbon;
 use Yajra\DataTables\Html\Button;
@@ -35,7 +36,7 @@ class AttendanceTodayDataTable extends DataTable
     public function query(Attendance $model)
     {
         $now = Carbon::now();
-        $data = Schedule::select()->whereDate('dates', Carbon::today())->join('employees', 'employees.id', '=', 'schedules.employees_id')->join('shifts','shifts.id','=','schedules.shifts_id')->join('attendances','attendances.schedules_id','=','schedules.id');
+        $data = Employee::select('schedules.id','employees.name','shifts.shift_name','attendances.at_in','attendances.at_out','attendances.lembur','attendances.status')->whereDate('schedules.dates', Carbon::today())->join('schedules', '.schedules.employees_id', '=', 'employees.id')->join('shifts','shifts.id','=','schedules.shifts_id')->join('attendances','attendances.schedules_id','=','schedules.id');
         return $this->applyScopes($data);
     }
 
@@ -70,11 +71,11 @@ class AttendanceTodayDataTable extends DataTable
         return [
             Column::make('id'),
             Column::make('name'),
-            Column::make('shift_name'),
-            Column::make('at_in'),
-            Column::make('at_out'),
-            Column::make('lembur'),
-            Column::make('status'),
+            Column::make('shift_name')->searchable(false),
+            Column::make('at_in')->searchable(false),
+            Column::make('at_out')->searchable(false),
+            Column::make('lembur')->searchable(false),
+            Column::make('status')->searchable(false),
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\DataTables;
 
+use App\Models\Jabatan;
 use App\Models\Salary;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -33,7 +34,7 @@ class SalaryDataTable extends DataTable
     public function query(Salary $model)
     {
         //return $model->newQuery();
-        $data = Salary::select('salaries.*','jabatans.jabatan')->join('jabatans', 'jabatans.id', '=', 'salaries.jabatan_id');
+        $data = Jabatan::select('salaries.*','jabatans.jabatan')->join('salaries', 'salaries.jabatan_id', '=', 'jabatans.id');
         return $this->applyScopes($data);
     }
 
@@ -68,11 +69,11 @@ class SalaryDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('salary'),
+            Column::make('salary')->searchable(false),
             Column::make('jabatan'),
-            Column::make('insentif'),
-            Column::make('lembur'),
-            Column::make('potongan'),
+            Column::make('insentif')->searchable(false),
+            Column::make('lembur')->searchable(false),
+            Column::make('potongan')->searchable(false),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)

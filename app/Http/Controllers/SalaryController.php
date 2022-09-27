@@ -7,6 +7,7 @@ use App\Models\Salary;
 use App\Http\Requests\StoreSalaryRequest;
 use App\Http\Requests\UpdateSalaryRequest;
 use App\Models\Jabatan;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,8 +21,9 @@ class SalaryController extends Controller
      */
     public function index(SalaryDataTable $dataTable)
     {
+        $companies = Setting::first();
         $jabatan= Jabatan::all();
-        return $dataTable->render('layouts.salaries.index',['jabatans'=>$jabatan]);
+        return $dataTable->render('layouts.salaries.index',['jabatans'=>$jabatan,'company'=>$companies]);
     }
 
     /**

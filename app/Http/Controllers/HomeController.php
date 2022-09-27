@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\AttendanceTodayDataTable;
+use App\Models\Setting;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -24,7 +25,14 @@ class HomeController extends Controller
      */
     public function index(AttendanceTodayDataTable $dataTable)
     {
+        $companies = Setting::first();
         $now = Carbon::now()->isoFormat ('dddd, D MMM Y');
-        return $dataTable->render('dashboard',['now'=>$now]);
+        return $dataTable->render('dashboard',['now'=>$now,'company'=>$companies]);
+    }
+    public function welcome()
+    {
+        $companies = Setting::first();
+        
+        return view('welcome');
     }
 }

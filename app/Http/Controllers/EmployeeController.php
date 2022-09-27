@@ -7,6 +7,7 @@ use App\Models\Employee;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Jabatan;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -29,8 +30,9 @@ class EmployeeController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }*/
+        $companies = Setting::first();
         $jabatan= Jabatan::all();
-        return $dataTable->render('layouts.employees.index',['jabatans'=>$jabatan]);
+        return $dataTable->render('layouts.employees.index',['jabatans'=>$jabatan,'company'=>$companies]);
     }
 
     public function getEmployees(EmployeesDataTable $dataTable){

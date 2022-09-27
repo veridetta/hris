@@ -19,9 +19,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/start', [App\Http\Controllers\HomeController::class, 'welcome'])->name('start');
 Route::get('/clear-cache-all', function() {
     Artisan::call('cache:clear');
   
@@ -61,10 +59,13 @@ Route::group(['middleware' => 'auth'], function () {
 	//SCHEDULE
 	Route::get('schedule', 'App\Http\Controllers\ScheduleController@index')->name('schedule');
 	Route::post('schedule_store', 'App\Http\Controllers\ScheduleController@store')->name('schedule_store');
-	Route::post('schedule_edit', [ScheduleController::class, 'edit'])->name('schedule_edit');;
+	Route::post('schedule_edit', [ScheduleController::class, 'edit'])->name('schedule_edit');
 	Route::post('schedule_delete', [ScheduleController::class, 'destroy'])->name('schedule_delete');
 	//ATTENDANCE
 	Route::get('attendance', 'App\Http\Controllers\AttendanceController@index')->name('attendance');
+	//SETTING
+	Route::get('/setting', 'App\Http\Controllers\SettingController@index')->name('setting');
+	Route::post('setting_store', 'App\Http\Controllers\SettingController@store')->name('setting_store');
 	//
 	 Route::get('table-list', function () {return view('pages.tables');})->name('table');
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);

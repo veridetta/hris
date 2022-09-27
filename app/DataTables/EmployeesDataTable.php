@@ -68,7 +68,7 @@ class EmployeesDataTable extends DataTable
         return [
             Column::make('id'),
             Column::make('name'),
-            Column::make('jabatan'),
+            Column::make('jabatan')->searchable(false),
             Column::make('jk'),
             Column::make('ttl'),
             Column::computed('action')

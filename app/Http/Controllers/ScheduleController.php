@@ -8,6 +8,7 @@ use App\Http\Requests\StoreScheduleRequest;
 use App\Http\Requests\UpdateScheduleRequest;
 use App\Models\Attendance;
 use App\Models\Employee;
+use App\Models\Setting;
 use App\Models\Shift;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Http\Request as Req;
@@ -23,9 +24,10 @@ class ScheduleController extends Controller
      */
     public function index(ScheduleDataTable $dataTable)
     {
+        $companies = Setting::first();
         $shifts= Shift::all();
         $employees= Employee::all();
-        return $dataTable->render('layouts.schedules.index',['shifts'=>$shifts,'employees'=>$employees]);
+        return $dataTable->render('layouts.schedules.index',['shifts'=>$shifts,'employees'=>$employees,'company'=>$companies]);
     }
 
     /**

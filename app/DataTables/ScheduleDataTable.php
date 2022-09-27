@@ -2,6 +2,7 @@
 
 namespace App\DataTables;
 
+use App\Models\Employee;
 use App\Models\Schedule;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -32,7 +33,7 @@ class ScheduleDataTable extends DataTable
      */
     public function query(Schedule $model)
     {
-        $data = Schedule::select('schedules.id AS ids','schedules.dates','shifts.*','employees.*')->join('employees', 'employees.id', '=', 'schedules.employees_id')->join('shifts','shifts.id','=','schedules.shifts_id');
+        $data = Employee::select('schedules.id','schedules.dates','shifts.in','shifts.out','employees.name')->join('schedules', 'schedules.employees_id', '=', 'employees.id')->join('shifts','shifts.id','=','schedules.shifts_id');
         return $this->applyScopes($data);
     }
 
@@ -65,12 +66,13 @@ class ScheduleDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('ids'),
-            Column::make('dates'),
-            Column::make('in'),
-            Column::make('out'),
+            Column::make('id'),
+            Column::make('dates')->searchable(false),
+            Column::make('in')->searchable(false),
+            Column::make('out')->searchable(false),
             Column::make('name'),
             Column::computed('action')
+                  ->searchable(false)
                   ->exportable(false)
                   ->printable(false)
                   ->width(60)
