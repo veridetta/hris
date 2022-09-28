@@ -15,7 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => [ 'start'] ] );
     }
 
     /**
@@ -28,11 +28,5 @@ class HomeController extends Controller
         $companies = Setting::first();
         $now = Carbon::now()->isoFormat ('dddd, D MMM Y');
         return $dataTable->render('dashboard',['now'=>$now,'company'=>$companies]);
-    }
-    public function welcome()
-    {
-        $companies = Setting::first();
-        
-        return view('welcome');
     }
 }

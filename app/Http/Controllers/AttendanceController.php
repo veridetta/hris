@@ -6,8 +6,14 @@ use App\DataTables\AttendanceDataTable;
 use App\Models\Attendance;
 use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\UpdateAttendanceRequest;
+use App\Models\Employee;
+use App\Models\Schedule;
 use App\Models\Setting;
+use App\Models\Shift;
 use Attribute;
+use Carbon\Carbon;
+use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class AttendanceController extends Controller
@@ -120,4 +126,108 @@ class AttendanceController extends Controller
       
         return Response()->json($company);
     }
+    public function start()
+    {
+        $companies = Setting::first();
+        $now = Carbon::now()->isoFormat ('dddd, D MMM Y');
+        return view('attendance',['now'=>$now,'company'=>$companies]);
+    }
+     public function start_attendance(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'rfid' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                        'error' => $validator->errors()->all()
+                    ]);
+        }
+        $employee=Employee::where('rfid',$request->rfid)->get();
+        if(!count($employee)){
+            $status="Data tidak ditemukan";
+            $response="error";
+            $pesan="Tidak Berhasil absen masuk, data tidak ditemukan";
+        }else{
+            $schedule = Schedule::where('employees_id',$employee[0]->id)->whereDate('dates', Carbon::today())->get();
+            if(!count($schedule)){
+                $status="Jadwal tidak sesuai";
+                $response="error";
+                $pesan=$employee->name."\n Tidak Berhasil absen masuk, jadwal tidak sesuai";
+            }else{
+                $shift = Shift::where('id',$schedule[0]->shifts_id)->get();
+                $dt = Carbon::now()->format("H:i:s");
+                $waktu = Carbon::now()->addMinutes(31)->format("H:i:s");
+                $masuk = Carbon::parse($shift[0]->at_in);
+                $keluar = Carbon::parse($shift[0]->at_out);
+                $telat = Carbon::parse($shift[0]->at_in)->addMinutes($shift[0]->late);
+                $lembur = Carbon::parse($shift[0]->at_out)->addMinutes($shift[0]->late);
+                $absen = Attendance::where('employees_id',$employee[0]->id)->where('schedules_id', $schedule[0]->id)->first();
+                $absen_status=$absen->status;
+                $status="Masuk";
+                $response="success";
+                $pesan=$employee[0]->name."\n Berhasil absen masuk pada pukul ".$dt;
+                $input=true;
+                if($absen_status=="Masuk"||$absen_status=="Terlambat"){
+                    if($dt>$keluar){
+                        if($dt>$lembur){
+                            $diff_in_hours = Carbon::parse($keluar)->diffInHours($dt);
+                            $status="Lembur";
+                            $response="warning";
+                            $pesan=$employee[0]->name."\n Berhasil absen pulang pada pukul ".$dt."\n Anda lembur ".$diff_in_hours." jam";
+                            $lemburan=$diff_in_hours;
+                        }else{
+                            $status="Pulang";
+                            $response="success";
+                            $pesan=$employee[0]->name."\n Berhasil absen pulang pada pukul ".$dt;
+                            $lemburan=0;
+                        }
+                    }else{
+                        $input=false;
+                        $status="Belum Pulang";
+                        $response="error";
+                        $pesan=$employee[0]->name."\n Jam kerja belum berakhir"; 
+                    }
+                    if($input){
+                        $attendance = Attendance::where('employees_id',$employee[0]->id)->where('schedules_id', $schedule[0]->id)->update(['at_out'=>$dt,'status'=>$status,'lembur'=>$lemburan]);
+                    }
+                }else if($absen_status=="Belum Masuk"){
+                    if($dt>$masuk){
+                        if($dt<$telat){
+                            $diff_in_minutes = Carbon::parse($masuk)->diffInMinutes($dt);
+                            $status="Terlambat";
+                            $response="warning";
+                            $pesan=$employee[0]->name."\n Berhasil absen masuk pada pukul ".$dt."\n Anda terlambat ".$diff_in_minutes." menit";
+                        }else{
+                            $input=false;
+                            $diff_in_minutes = Carbon::parse($masuk)->diffInMinutes($dt);
+                            $status="Sangat Terlambat";
+                            $response="error";
+                            $pesan=$employee[0]->name."\n Tidak Berhasil absen masuk pada pukul ".$dt."\n Anda terlambat ".$diff_in_minutes." menit";
+                        }
+
+                    }else if($waktu>$masuk){
+                        $diff_in_minutes = Carbon::parse($masuk)->diffInMinutes($dt);
+                        $status="Masuk";
+                        $response="success";
+                        $pesan=$employee[0]->name."\n Berhasil absen masuk pada pukul ".$dt."\n Anda lebih awal ".$diff_in_minutes." menit";
+                    }else{
+                        $input=false;
+                            $diff_in_minutes = Carbon::parse($masuk)->diffInMinutes($dt);
+                            $status="Jadwal tidak sesuai";
+                            $response="error";
+                            $pesan=$employee[0]->name."\n Tidak Berhasil absen masuk, jadwal tidak sesuai";
+                    }
+                    if($input){
+                        $attendance = Attendance::where('employees_id',$employee[0]->id)->where('schedules_id', $schedule[0]->id)->update(['at_in'=>$dt,'status'=>$status,'lembur'=>0]);
+                    }
+                }
+            }
+            
+        }
+        
+        //return view('layouts.employees.index',['success' => 'Post created successfully.']);
+        return response()->json(['status'=>$response,'message'=>$pesan,'title'=>$status]);
+    }
 }
+
+

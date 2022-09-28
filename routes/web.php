@@ -18,15 +18,14 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/start', [App\Http\Controllers\HomeController::class, 'welcome'])->name('start');
+Route::get('/start', [App\Http\Controllers\AttendanceController::class, 'start'])->name('start');
+Route::post('start_attendance', 'App\Http\Controllers\AttendanceController@start_attendance')->name('start_attendance');
 Route::get('/clear-cache-all', function() {
     Artisan::call('cache:clear');
-  
     dd("Cache Clear All");
 });
 Auth::routes();
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Auth::routes();
 Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 Route::group(['middleware' => 'auth'], function () {
