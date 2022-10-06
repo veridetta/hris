@@ -138,6 +138,14 @@
                         </ul>
                     </div>
                 </li>
+                <?php 
+                use Carbon\Carbon;
+                ?>
+                <li class="nav-item  {{ (request()->is('report')) ? 'active': ''}}">
+                    <a class="nav-link" href="{{ route('report',['month'=>Carbon::now()->month,'year'=>Carbon::now()->year]) }}">
+                        <i class="fa fa-money-bill"></i> {{ __('Laporan Gaji') }}
+                    </a>
+                </li>
                 <li class="nav-item  {{ (request()->is('setting')) ? 'active': ''}}">
                     <a class="nav-link" href="{{ route('setting') }}">
                         <i class="fa fa-cog "></i> {{ __('Pengaturan') }}

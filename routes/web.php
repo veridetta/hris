@@ -5,6 +5,7 @@ use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ShiftController;
+use App\Http\Controllers\PaymentController;
 use App\Models\Shift;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +26,7 @@ Route::get('/clear-cache-all', function() {
     dd("Cache Clear All");
 });
 Auth::routes();
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('/');
 Auth::routes();
 Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 Route::group(['middleware' => 'auth'], function () {
@@ -65,6 +66,9 @@ Route::group(['middleware' => 'auth'], function () {
 	//SETTING
 	Route::get('/setting', 'App\Http\Controllers\SettingController@index')->name('setting');
 	Route::post('setting_store', 'App\Http\Controllers\SettingController@store')->name('setting_store');
+	//PAYMENTS
+	Route::get('report/{month?}/{year?}', [PaymentController::class, 'show'])->name('report');
+	Route::get('report/details/{month}/{id}/{year}', [PaymentController::class, 'detail'])->name('detail');
 	//
 	 Route::get('table-list', function () {return view('pages.tables');})->name('table');
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
