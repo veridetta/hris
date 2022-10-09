@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\AttendanceDataTable;
+use App\DataTables\HistoriesDataTable;
+use App\DataTables\PaymentsDataTable;
 use App\Models\Attendance;
 use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\UpdateAttendanceRequest;
@@ -94,9 +96,9 @@ class AttendanceController extends Controller
      * @param  \App\Models\Attendance  $attendance
      * @return \Illuminate\Http\Response
      */
-    public function edit(Attendance $attendance)
+    public function edit(Request $request)
     {
-        $where = array('id' => $attendance->id);
+        $where = array('id' => $request->id);
         $company  = Attendance::where($where)->first();
       
         return Response()->json($company);
@@ -227,6 +229,16 @@ class AttendanceController extends Controller
         
         //return view('layouts.employees.index',['success' => 'Post created successfully.']);
         return response()->json(['status'=>$response,'message'=>$pesan,'title'=>$status]);
+    }
+    public function view(){
+        $companies=Setting::first();
+        return view('view',['company'=>$companies]);
+    }
+    public function history(HistoriesDataTable $dataTable, Request $request){
+        $id=$request->id;
+        $month=$request->month;
+        $year=$request->year;
+        return $dataTable->with('id',$id)->with('month',$month)->with('year',$year)->render('history');
     }
 }
 

@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                      <table class="table table-bordered table-striped">
+                      <table class="table table-bordered table-striped table-responsive">
                         <thead class="table-primary">
                           <tr>
                             <td class="font-weight-bold">No</td>
@@ -50,18 +50,30 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <?php $no=0;?>
+                          <?php 
+                            use App\Models\Payment;
+                            $no=0;?>
                           @foreach ($employees as $employee)
-                          <?php $no++;?>
+                          <?php 
+                          $payment=Payment::where('employees_id','=',$employee->id)->where('month','=',request()->month)->where('year','=',request()->year)->first();
+                          $no++
+                          ;?>
                           <tr>
                             <td>{{$no}}</td>
                             <td>{{$employee->name}}</td>
                             <td>{{$employee->jabatan}}</td>
-                            <td>{{$employee->salary}}</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td>@currency($employee->salary)</td>
+                            <td>@currency($employee->insentif)</td>
+                            @if(empty($payment))
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            @else
+                            <td>@currency($payment->lembur)</td>
+                            <td>@currency($payment->potongan)</td>
+                            <td>@currency($payment->payment)</td>
+                            @endif
+                            
                             <td><a onClick="validasi({{$employee->id}})" href="javascript:void(0)" class="btn btn-sm btn-success">Validasi</a></td>
                           </tr>
                           @endforeach

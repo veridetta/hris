@@ -29,6 +29,12 @@
             <!-- Navbar items -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
+                    <a class="nav-link nav-link-icon" href="{{ route('view') }}">
+                        <i class="fa fa-clock"></i>
+                        <span class="nav-link-inner--text">{{ __('History') }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link nav-link-icon" href="{{ route('start') }}">
                         <i class="ni ni-planet"></i>
                         <span class="nav-link-inner--text">{{ __('Attendance') }}</span>

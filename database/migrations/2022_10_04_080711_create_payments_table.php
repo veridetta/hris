@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employees_id')->constrained('employees');
-            $table->date('month');
-            $table->date('year');
+            $table->integer('month');
+            $table->integer('year');
             $table->integer('lembur');
             $table->integer('telat');
             $table->integer('tidak_masuk');

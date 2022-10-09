@@ -16,6 +16,8 @@ class Payment extends Model
         'month',
         'year',
         'telat',
+        'tidak_masuk',
+        'potongan',
         'payment'
     ];
     public function employees()

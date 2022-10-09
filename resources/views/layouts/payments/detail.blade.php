@@ -12,7 +12,8 @@
                                 <h3 class="mb-0">Detail Kehadiran</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <a class="btn btn-sm btn-primary" onClick="add()" href="javascript:void(0)">Validasi Sekarang</a>
+                                <a class="btn btn-sm btn-primary" onClick="addFunc({{request()->id}},{{request()->month}},{{request()->year}})" href="javascript:void(0)">Validasi Sekarang</a><a class="btn btn-sm btn-warning"  href="{{ url('pdf/'.request()->month.'/'.request()->id.'/'.request()->year) }}" target="_blank">Cetak Slip</a>
+                                <p><small>*Wajib validasi data</small></p>
                             </div>
                         </div>
                     </div>
@@ -34,6 +35,8 @@
               <form id="PegawaiForm" >
                 <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
                 <input type="hidden" name="id" id="id" value="" />
+                <input type="hidden" name="employees" id="employees" value="" />
+                <input type="hidden" name="schedules" id="schedules" value="" />
               <div class="modal-header">
                 <h5 class="modal-title" id="pegawaiTitle">Modal title</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -46,8 +49,34 @@
                 </div>
       
                 <div class="mb-3">
-                    <label for="jabatan" class="form-label">Jabatan:</label>
-                    <input type="text" id="jabatan" name="jabatan" class="form-control" placeholder="Nama Jabatan" required="">
+                  <div class="row">
+                    <div class="col-6">
+                      <label for="at_in" class="form-label">Absen Masuk:</label>
+                      <input type="time" id="at_in" name="at_in" class="form-control" placeholder="Absen Masuk" required="">
+                    </div>
+                    <div class="col-6">
+                      <label for="at_out" class="form-label">Absen Keluar:</label>
+                      <input type="time" id="at_out" name="at_out" class="form-control" placeholder="Absen Keluar" required="">
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class="row">
+                    <div class="col-6">
+                      <label for="lembur" class="form-label">Lembur:</label>
+                      <input type="number" id="lembur" name="lembur" class="form-control" placeholder="Lembur" required="">
+                    </div>
+                    <div class="col-6">
+                      <label for="status" class="form-label">Status:</label>
+                      <select id="status" name="status" class="form-control"  required="">
+                        <option>Belum Masuk</option>
+                        <option>Masuk</option>
+                        <option>Terlambat</option>
+                        <option>Pulang</option>
+                        <option>Lembur</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="modal-footer">
@@ -70,18 +99,38 @@
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
   });  
+  function addFunc(id,month,year){    
+    $.ajax({
+      type:"POST",
+      url: "{{ url('report/generate_payments') }}",
+      data: { id: id,month:month,year:year },
+      dataType: 'json',
+      success:function(data){
+        Swal.fire({
+          icon: data.status,
+          title: data.title,
+          text: data.message
+          });
+      }
+    });
+  }  
   function editFunc(id){
     $.ajax({
       type:"POST",
-      url: "{{ url('jabatan_edit') }}",
+      url: "{{ url('attendance_edit') }}",
       data: { id: id },
       dataType: 'json',
       success: function(res){
-        $('#pegawaiTitle').html("Ubah Jabatan");
+        $('#pegawaiTitle').html("Ubah Absensi");
         $('#tambahModal').modal('show');
-        url_ajax="{{ url('jabatan_edit') }}";
+        url_ajax="{{ url('attendance_edit') }}";
         $('#id').val(res.id);
-        $('#jabatan').val(res.jabatan);
+        $('#employees').val(res.employees_id);
+        $('#schedules').val(res.schedules_id);
+        $('#at_in').val(res.at_in);
+        $('#at_out').val(res.at_out);
+        $('#lembur').val(res.lembur);
+        $('#status').val(res.status);
       }
     });
   }  
@@ -89,11 +138,16 @@
   $("#btnSave").click(function(e){
       e.preventDefault();
       var id = $("#id").val();
-      var jabatan = $("#jabatan").val();
+      var employees = $("#employees").val();
+      var schedules = $("#schedules").val();
+      var at_in = $("#at_in").val();
+      var at_out = $("#at_out").val();
+      var lembur = $("#lembur").val();
+      var status = $("#status").val();
       $.ajax({
          type:'POST',
-         url:"{{ url('jabatan_store') }}",
-         data:{id:id, jabatan:jabatan},
+         url:"{{ url('attendance_store') }}",
+         data:{id:id, at_in:at_in, at_out:at_out, lembur:lembur, status:status,employees:employees,schedules:schedules},
          success:function(data){
           $("#tambahModal").modal('hide');
           $('.buttons-reload').trigger('click');

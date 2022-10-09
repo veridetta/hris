@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\PaymentController;
+use App\Models\Attendance;
 use App\Models\Shift;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/start', [App\Http\Controllers\AttendanceController::class, 'start'])->name('start');
+Route::get('/view', [App\Http\Controllers\AttendanceController::class, 'view'])->name('view');
+Route::get('history/{month}/{id}/{year}', [AttendanceController::class, 'history'])->name('history');
 Route::post('start_attendance', 'App\Http\Controllers\AttendanceController@start_attendance')->name('start_attendance');
 Route::get('/clear-cache-all', function() {
     Artisan::call('cache:clear');
@@ -63,14 +67,19 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('schedule_delete', [ScheduleController::class, 'destroy'])->name('schedule_delete');
 	//ATTENDANCE
 	Route::get('attendance', 'App\Http\Controllers\AttendanceController@index')->name('attendance');
+	Route::post('attendance_store', 'App\Http\Controllers\AttendanceController@store')->name('attendance_store');
+	Route::post('attendance_edit', [AttendanceController::class, 'edit'])->name('attendance_edit');
 	//SETTING
 	Route::get('/setting', 'App\Http\Controllers\SettingController@index')->name('setting');
 	Route::post('setting_store', 'App\Http\Controllers\SettingController@store')->name('setting_store');
 	//PAYMENTS
 	Route::get('report/{month?}/{year?}', [PaymentController::class, 'show'])->name('report');
 	Route::get('report/details/{month}/{id}/{year}', [PaymentController::class, 'detail'])->name('detail');
+	Route::post('report/generate_payments', 'App\Http\Controllers\PaymentController@generate_payments')->name('generate_payments');
+	Route::get('pdf/{month}/{id}/{year}', [PaymentController::class, 'view'])->name('download_payments');
+	Route::get('get_pdf/{month}/{id}/{year}', [PaymentController::class, 'view'])->name('get_download_payments');
 	//
-	 Route::get('table-list', function () {return view('pages.tables');})->name('table');
+	Route::get('table-list', function () {return view('pages.tables');})->name('table');
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
 });
 
