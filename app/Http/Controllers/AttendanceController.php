@@ -163,7 +163,7 @@ class AttendanceController extends Controller
                 $keluar = Carbon::parse($shift->out)->format("H:i:s");
                 $telat = Carbon::parse($shift->in)->addMinutes($shift->late)->format("H:i:s");
                 $lembur = Carbon::parse($shift->out)->addMinutes($shift->late)->format("H:i:s");
-                $absen = Attendance::where('employees_id',$employee[0]->id)->where('schedules_id', $schedule[0]->id)->first();
+                $absen = Attendance::where('employees_id',$employee[0]->id)->where('schedules_id', $schedule[0]->id)->where('status','=','Belum Masuk')->first();
                 $absen_status=$absen->status;
                 $status="Masuk";
                 $response="success";
@@ -238,7 +238,12 @@ class AttendanceController extends Controller
         $id=$request->id;
         $month=$request->month;
         $year=$request->year;
-        return $dataTable->with('id',$id)->with('month',$month)->with('year',$year)->render('history');
+        $prev_month = date("m", strtotime("2017-" . $month . "-01" . " -1 month"));;
+        $from_mentah = $year.'-'.$prev_month.'-21';
+        $to_mentah = $year.'-'.$month.'-20';
+        $from = date($from_mentah);
+        $to = date($to_mentah);
+        return $dataTable->with('id',$id)->with('from',$from)->with('to',$to)->render('history');
     }
 }
 

@@ -42,7 +42,8 @@
                             <td class="font-weight-bold">Nama</td>
                             <td class="font-weight-bold">Jabatan</td>
                             <td class="font-weight-bold">Pokok</td>
-                            <td class="font-weight-bold">Insentif</td>
+                            <td class="font-weight-bold">Uang Makan</td>
+                            <td class="font-weight-bold">Transport</td>
                             <td class="font-weight-bold">Lembur</td>
                             <td class="font-weight-bold">Potongan</td>
                             <td class="font-weight-bold">Total</td>
@@ -63,7 +64,8 @@
                             <td>{{$employee->name}}</td>
                             <td>{{$employee->jabatan}}</td>
                             <td>@currency($employee->salary)</td>
-                            <td>@currency($employee->insentif)</td>
+                            <td>@currency($employee->makan)</td>
+                            <td>@currency($employee->transport)</td>
                             @if(empty($payment))
                             <td>-</td>
                             <td>-</td>

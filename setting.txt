@@ -1,0 +1,2 @@
+Page setting menggunakan versi subdomain
+setting.blade.php

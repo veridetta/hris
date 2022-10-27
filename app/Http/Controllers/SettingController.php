@@ -54,11 +54,11 @@ class SettingController extends Controller
         }
         $path_logo = time().'.logo.'.$request->logo->extension();
         // Public Folder
-        $request->logo->move(public_path('images'), $path_logo);
+        $request->logo->storeAs('images', $path_logo);
         
         $path_ttd = time().'.ttd.'.$request->ttd->extension();
         // Public Folder
-        $request->ttd->move(public_path('images'), $path_ttd);
+        $request->ttd->storeAs('images', $path_ttd);
 
         $employee=Setting::updateOrCreate([
             'id' => $request->id

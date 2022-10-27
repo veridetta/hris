@@ -71,9 +71,10 @@ class SalaryDataTable extends DataTable
             Column::make('id'),
             Column::make('salary')->searchable(false),
             Column::make('jabatan'),
-            Column::make('insentif')->searchable(false),
+            Column::make('makan')->searchable(false),
+            Column::make('transport')->searchable(false),
             Column::make('lembur')->searchable(false),
-            Column::make('potongan')->searchable(false),
+            Column::make('potongan')->title('BPJS')->searchable(false),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)

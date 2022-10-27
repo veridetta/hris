@@ -35,7 +35,7 @@ class HistoriesDataTable extends DataTable
     public function query(Attendance $model)
     {
         $now = Carbon::now();
-        $data = Schedule::select('attendances.id','attendances.at_in','attendances.at_out','attendances.lembur','shifts.in','shifts.out','attendances.status','schedules.dates')->join('attendances','attendances.schedules_id','=','schedules.id')->join('shifts','shifts.id','=','schedules.shifts_id')->join('employees','employees.id','=','attendances.employees_id')->where('employees.rfid',$this->attributes['id'])->whereMonth('schedules.dates',$this->attributes['month'])->whereYear('schedules.dates',$this->attributes['year']);
+        $data = Schedule::select('attendances.id','attendances.at_in','attendances.at_out','attendances.lembur','shifts.in','shifts.out','attendances.status','schedules.dates')->join('attendances','attendances.schedules_id','=','schedules.id')->join('shifts','shifts.id','=','schedules.shifts_id')->join('employees','employees.id','=','attendances.employees_id')->where('employees.rfid',$this->attributes['id'])->whereBetween('schedules.dates', [$this->attributes['from'], $this->attributes['to']]);
         return $this->applyScopes($data);
     }
 
