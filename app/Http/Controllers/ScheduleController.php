@@ -10,7 +10,6 @@ use App\Models\Attendance;
 use App\Models\Employee;
 use App\Models\Setting;
 use App\Models\Shift;
-use GuzzleHttp\Psr7\Request;
 use Illuminate\Http\Request as Req;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
@@ -107,9 +106,9 @@ class ScheduleController extends Controller
      * @param  \App\Models\Schedule  $schedule
      * @return \Illuminate\Http\Response
      */
-    public function edit(Schedule $schedule)
+    public function edit(Req $request)
     {
-        $where = array('id' => $schedule->id);
+        $where = array('id' => $request->id);
         $company  = Schedule::where($where)->first();
       
         return Response()->json($company);
@@ -135,7 +134,6 @@ class ScheduleController extends Controller
      */
     public function destroy(Req $schedule)
     {
-
         $company = Schedule::where('id','=',$schedule->id)->delete();
         return Response()->json($company);
     }

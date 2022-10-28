@@ -64,19 +64,21 @@
                             <td>{{$employee->name}}</td>
                             <td>{{$employee->jabatan}}</td>
                             <td>@currency($employee->salary)</td>
-                            <td>@currency($employee->makan)</td>
-                            <td>@currency($employee->transport)</td>
                             @if(empty($payment))
                             <td>-</td>
                             <td>-</td>
                             <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><a onClick="validasi({{$employee->id}})" href="javascript:void(0)" class="btn btn-sm btn-success">Validasi</a></td>
                             @else
+                            <td>@currency($payment->makan)</td>
+                            <td>@currency($payment->transport)</td>
                             <td>@currency($payment->lembur)</td>
                             <td>@currency($payment->potongan)</td>
                             <td>@currency($payment->payment)</td>
+                            <td><a onClick="validasi({{$employee->id}})" href="javascript:void(0)" class="btn btn-sm btn-success">Validasi</a> <a href="javascript:void(0)" class="btn btn-danger btn-sm" onClick="deleteFunc({{ $payment->id }})"><i class="fas fa-trash"></i></a></td>
                             @endif
-                            
-                            <td><a onClick="validasi({{$employee->id}})" href="javascript:void(0)" class="btn btn-sm btn-success">Validasi</a></td>
                           </tr>
                           @endforeach
                       </table>
@@ -105,5 +107,20 @@
   function validasi(id){
     window.location.href = "../details/"+$('#month').val()+"/"+id+"/"+$('#year').val();
   };
+  function deleteFunc(id){
+    if (confirm("Delete Record?") == true) {
+      var id = id;
+      // ajax
+      $.ajax({
+        type:"POST",
+        url: "{{ url('payments_delete') }}",
+        data: { id: id },
+        dataType: 'json',
+        success: function(res){
+          window.location.reload()
+        }
+      });
+    }
+  }
 </script>
 @endpush

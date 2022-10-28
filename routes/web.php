@@ -69,6 +69,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('attendance', 'App\Http\Controllers\AttendanceController@index')->name('attendance');
 	Route::post('attendance_store', 'App\Http\Controllers\AttendanceController@store')->name('attendance_store');
 	Route::post('attendance_edit', [AttendanceController::class, 'edit'])->name('attendance_edit');
+	Route::post('attendance_delete', [AttendanceController::class, 'delete'])->name('attendance_delete');
 	//SETTING
 	Route::get('/setting', 'App\Http\Controllers\SettingController@index')->name('setting');
 	Route::post('setting_store', 'App\Http\Controllers\SettingController@store')->name('setting_store');
@@ -78,6 +79,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('report/generate_payments', 'App\Http\Controllers\PaymentController@generate_payments')->name('generate_payments');
 	Route::get('pdf/{month}/{id}/{year}', [PaymentController::class, 'view'])->name('download_payments');
 	Route::get('get_pdf/{month}/{id}/{year}', [PaymentController::class, 'view'])->name('get_download_payments');
+	Route::post('payments_delete', [PaymentController::class, 'delete'])->name('payments_delete');
 	//
 	Route::get('table-list', function () {return view('pages.tables');})->name('table');
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);

@@ -123,7 +123,7 @@
 		</tr>
 		<tr>
 			<td style="width:740px">&nbsp;</td>
-			<td style="width:412px">{{'Manajer '.$setting->company}}</td>
+			<td style="width:412px">{{'Direktur '.$setting->company}}</td>
 		</tr>
 	</tbody>
 </table>

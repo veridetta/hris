@@ -172,7 +172,7 @@ class PaymentController extends Controller
             $makan = ($attendance->count()*$jabatan->makan)-($total_telat*$jabatan->makan)-($total_absen*$jabatan->makan);
             $transport = ($attendance->count()*$jabatan->transport)-($total_telat*$jabatan->transport)-($total_absen*$jabatan->transport);
             $fee_lembur=$total_lembur*$jabatan->lembur;
-            $fee_telat=$total_telat*$jabatan->potongan;
+            $fee_telat=$jabatan->potongan;
             $total_gaji=$gaji+$fee_lembur+$jabatan->insentif-$fee_telat;
             //Create or update database
             $employee=Payment::updateOrCreate([
@@ -221,5 +221,11 @@ class PaymentController extends Controller
             $str = preg_replace('/\s{2,}/', ' ', trim($str));
         }
         return $str;
+    }
+    public function delete(Request $request)
+    {
+        $company = Payment::where('id',$request->id)->delete();
+      
+        return Response()->json($company);
     }
 }

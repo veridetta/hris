@@ -154,7 +154,7 @@ class AttendanceController extends Controller
             if(!count($schedule)){
                 $status="Jadwal tidak sesuai";
                 $response="error";
-                $pesan=$employee->name."\n Tidak Berhasil absen masuk, Tidak ada jadwal ";
+                $pesan=$employee[0]->name."\n Tidak Berhasil absen masuk, Tidak ada jadwal ";
             }else{
                 $shift = Shift::where('id',$schedule[0]->shifts_id)->first();
                 $dt = Carbon::now()->format("H:i:s");
@@ -244,6 +244,12 @@ class AttendanceController extends Controller
         $from = date($from_mentah);
         $to = date($to_mentah);
         return $dataTable->with('id',$id)->with('from',$from)->with('to',$to)->render('history');
+    }
+    public function delete(Request $request)
+    {
+        $company = Attendance::where('id',$request->id)->delete();
+      
+        return Response()->json($company);
     }
 }
 

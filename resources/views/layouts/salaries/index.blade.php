@@ -69,8 +69,8 @@
                   <input type="number" id="lembur" name="lembur" class="form-control" placeholder="Perjam" required="">
                 </div>
                 <div class="mb-3">
-                  <label for="potongan" class="form-label">Potongan Keterlambatan:</label>
-                  <input type="number" id="potongan" name="potongan" class="form-control" placeholder="Perterlambar" required="">
+                  <label for="potongan" class="form-label">BPJS:</label>
+                  <input type="number" id="potongan" name="potongan" class="form-control" placeholder="Potongan BPJS" required="">
                 </div>
               </div>
               <div class="modal-footer">
