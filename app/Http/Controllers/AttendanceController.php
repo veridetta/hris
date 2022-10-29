@@ -163,7 +163,7 @@ class AttendanceController extends Controller
                 $keluar = Carbon::parse($shift->out)->format("H:i:s");
                 $telat = Carbon::parse($shift->in)->addMinutes($shift->late)->format("H:i:s");
                 $lembur = Carbon::parse($shift->out)->addMinutes($shift->late)->format("H:i:s");
-                $absen = Attendance::where('employees_id',$employee[0]->id)->where('schedules_id', $schedule[0]->id)->where('status','=','Belum Masuk')->first();
+                $absen = Attendance::where('employees_id',$employee[0]->id)->where('schedules_id', $schedule[0]->id)->first();
                 $absen_status=$absen->status;
                 $status="Masuk";
                 $response="success";
@@ -196,13 +196,13 @@ class AttendanceController extends Controller
                     if($dt>$masuk){
                         if($dt<$telat){
                             $diff_in_minutes = Carbon::parse($masuk)->diffInMinutes($dt);
-                            $status="Terlambat";
-                            $response="warning";
-                            $pesan=$employee[0]->name."\n Berhasil absen masuk pada pukul ".$dt."\n Anda terlambat ".$diff_in_minutes." menit";
+                            $status="Masuk";
+                            $response="success";
+                            $pesan=$employee[0]->name."\n Berhasil absen masuk pada pukul ".$dt;
                         }else{
                             $input=false;
                             $diff_in_minutes = Carbon::parse($masuk)->diffInMinutes($dt);
-                            $status="Sangat Terlambat";
+                            $status="Terlambat";
                             $response="error";
                             $pesan=$employee[0]->name."\n Tidak Berhasil absen masuk pada pukul ".$dt."\n Anda terlambat ".$diff_in_minutes." menit";
                         }
@@ -217,7 +217,7 @@ class AttendanceController extends Controller
                             $diff_in_minutes = Carbon::parse($masuk)->diffInMinutes($dt);
                             $status="Jadwal tidak sesuai";
                             $response="error";
-                            $pesan=$employee[0]->name."\n Tidak Berhasil absen masuk, jadwal tidak sesuai ".$masuk." sekarang ".$waktu;
+                            $pesan=$employee[0]->name."\n Tidak Berhasil absen masuk, jadwal tidak sesuai ".$masuk." sekarang ".$dt;
                     }
                     if($input){
                         $attendance = Attendance::where('employees_id',$employee[0]->id)->where('schedules_id', $schedule[0]->id)->update(['at_in'=>$dt,'status'=>$status,'lembur'=>0]);
