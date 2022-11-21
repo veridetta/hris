@@ -173,7 +173,7 @@ class PaymentController extends Controller
             $transport = ($attendance->count()*$jabatan->transport)-($total_telat*$jabatan->transport)-($total_absen*$jabatan->transport);
             $fee_lembur=$total_lembur*$jabatan->lembur;
             $fee_telat=$jabatan->potongan;
-            $total_gaji=$gaji+$fee_lembur+$jabatan->insentif-$fee_telat;
+            $total_gaji=$gaji+$fee_lembur+$jabatan->insentif+$makan+$transport-$fee_telat;
             //Create or update database
             $employee=Payment::updateOrCreate([
                 'employees_id' => $id,
