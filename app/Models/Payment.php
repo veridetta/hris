@@ -17,6 +17,8 @@ class Payment extends Model
         'year',
         'telat',
         'tidak_masuk',
+        'makan',
+        'transport',
         'potongan',
         'payment'
     ];

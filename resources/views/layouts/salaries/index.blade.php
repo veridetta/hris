@@ -57,16 +57,20 @@
                     <input type="number" id="salary" name="salary" class="form-control" placeholder="Bulanan" required="">
                 </div>
                 <div class="mb-3">
-                  <label for="insentif" class="form-label">Insentif:</label>
-                  <input type="number" id="insentif" name="insentif" class="form-control" placeholder="Bulanan" required="">
+                  <label for="insentif" class="form-label">Uang Makan:</label>
+                  <input type="number" id="makan" name="makan" class="form-control" placeholder="Harian" required="">
+                </div>
+                <div class="mb-3">
+                  <label for="insentif" class="form-label">Uang Transport:</label>
+                  <input type="number" id="transport" name="transport" class="form-control" placeholder="Harian" required="">
                 </div>
                 <div class="mb-3">
                   <label for="lembur" class="form-label">Lembur:</label>
                   <input type="number" id="lembur" name="lembur" class="form-control" placeholder="Perjam" required="">
                 </div>
                 <div class="mb-3">
-                  <label for="potongan" class="form-label">Potongan Keterlambatan:</label>
-                  <input type="number" id="potongan" name="potongan" class="form-control" placeholder="Perterlambar" required="">
+                  <label for="potongan" class="form-label">BPJS:</label>
+                  <input type="number" id="potongan" name="potongan" class="form-control" placeholder="Potongan BPJS" required="">
                 </div>
               </div>
               <div class="modal-footer">
@@ -111,7 +115,8 @@
         $('#id').val(res.id);
         $('#jabatan').val(res.jabatan_id);
         $('#salary').val(res.salary);
-        $('#insentif').val(res.insentif);
+        $('#makan').val(res.makan);
+        $('#transport').val(res.transport);
         $('#lembur').val(res.lembur);
         $('#potongan').val(res.potongan);
       }
@@ -138,13 +143,14 @@
       var id = $("#id").val();
       var jabatan = $("#jabatan").val();
       var salary = $("#salary").val();
-      var insentif = $("#insentif").val();
+      var makan = $("#makan").val();
+      var transport = $("#transport").val();
       var lembur = $("#lembur").val();
       var potongan = $("#potongan").val();
       $.ajax({
          type:'POST',
          url:"{{ url('salary_store') }}",
-         data:{id:id, salary:salary, insentif:insentif,lembur:lembur,jabatan:jabatan,potongan:potongan},
+         data:{id:id, salary:salary, makan:makan,transport:transport,lembur:lembur,jabatan:jabatan,potongan:potongan},
          success:function(data){
           $("#tambahModal").modal('hide');
           $('.buttons-reload').trigger('click');

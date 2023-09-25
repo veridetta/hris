@@ -4,7 +4,7 @@
         $company = App\Models\Setting::first();
         ?>
         <a class="navbar-brand" href="{{ route('home') }}">
-            <img src="{{ asset('images/'.$company->logo) }}"" />
+            <img src="//files.segarsehatgorontalo.com/public/images/{{$company->logo}}" />
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-main" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="col-6 collapse-brand">
                         <a href="{{ route('start') }}">
-                            <img src="{{ asset('images/'.$company->logo) }}">
+                            <img src="//files.segarsehatgorontalo.com/public/images/{{ $company->logo }}">
                         </a>
                     </div>
                     <div class="col-6 collapse-close">

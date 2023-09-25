@@ -25,6 +25,11 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
         <!-- Argon CSS -->
         <link type="text/css" href="{{ asset('argon') }}/css/argon.css?v=1.0.0" rel="stylesheet">
+        <style>
+            .pinggir{
+                width: 10%;
+            }
+        </style>
     </head>
     <body class="{{ $class ?? '' }}">
         @auth()
@@ -34,7 +39,7 @@
             @include('layouts.navbars.sidebar')
         @endauth
         
-        <div class="main-content">
+        <div class="main-content wrapper" style="width:100vw !important;">
             @include('layouts.navbars.navbar')
             @yield('content')
         </div>
@@ -54,5 +59,10 @@
         
         <!-- Argon JS -->
         <script src="{{ asset('argon') }}/js/argon.js?v=1.0.0"></script>
+        <script>
+            $("#btn-nav-side").click(function(){
+                $("#sidenav-collapse-main").toggleClass('pinggir');
+            })
+        </script>
     </body>
 </html>

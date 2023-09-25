@@ -33,7 +33,7 @@ class ScheduleDataTable extends DataTable
      */
     public function query(Schedule $model)
     {
-        $data = Employee::select('schedules.id','schedules.dates','shifts.in','shifts.out','employees.name')->join('schedules', 'schedules.employees_id', '=', 'employees.id')->join('shifts','shifts.id','=','schedules.shifts_id');
+        $data = Employee::select('schedules.id','schedules.dates','shifts.in','shifts.out','employees.name','shifts.shift_name')->join('schedules', 'schedules.employees_id', '=', 'employees.id')->join('shifts','shifts.id','=','schedules.shifts_id');
         return $this->applyScopes($data);
     }
 
@@ -68,6 +68,7 @@ class ScheduleDataTable extends DataTable
         return [
             Column::make('id'),
             Column::make('dates')->searchable(false),
+            Column::make('shift_name')->searchable(false),
             Column::make('in')->searchable(false),
             Column::make('out')->searchable(false),
             Column::make('name'),

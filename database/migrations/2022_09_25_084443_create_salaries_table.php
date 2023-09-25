@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('jabatan_id')->constrained('jabatans');
             $table->integer('salary');
-            $table->integer('insentif');
+            $table->integer('makan');
+            $table->integer('transport');
             $table->integer('lembur');
             $table->integer('potongan');
             $table->timestamps();

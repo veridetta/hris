@@ -129,8 +129,9 @@
         $('#pegawaiTitle').html("Ubah Shift");
         $('#tambahModal').modal('show');
         $('#id').val(id);
-        $('dates[0]').val(res.dates);
-        $('shifts[0]').val(res.shifts);
+        $('#employees').val(res.employees_id);
+        $('#dates').val(res.dates);
+        $('#shifts').val(res.shifts_id);
       }
     });
   }  

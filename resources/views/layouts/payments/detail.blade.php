@@ -158,5 +158,20 @@
       });
   
   });
+  function deleteFunc(id){
+    if (confirm("Delete Record?") == true) {
+      var id = id;
+      // ajax
+      $.ajax({
+        type:"POST",
+        url: "{{ url('attendance_delete') }}",
+        data: { id: id },
+        dataType: 'json',
+        success: function(res){
+          $('.buttons-reload').trigger('click');
+        }
+      });
+    }
+  }
 </script>
 @endpush

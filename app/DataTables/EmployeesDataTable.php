@@ -32,7 +32,7 @@ class EmployeesDataTable extends DataTable
     public function query(Employee $model)
     {
         //return $model->newQuery()->select('*');;
-        $data = Employee::select()->join('jabatans', 'jabatans.id', '=', 'employees.jabatans_id') ;
+        $data = Employee::select('employees.id','employees.name','employees.jk','employees.ttl','jabatans.jabatan')->join('jabatans', 'jabatans.id', '=', 'employees.jabatans_id') ;
         return $this->applyScopes($data);
     }
 
@@ -66,11 +66,11 @@ class EmployeesDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('id'),
-            Column::make('name'),
+            Column::make('id')->searchable(false),
+            Column::make('name')->searchable(true),
             Column::make('jabatan')->searchable(false),
-            Column::make('jk'),
-            Column::make('ttl'),
+            Column::make('jk')->searchable(false),
+            Column::make('ttl')->searchable(false),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)

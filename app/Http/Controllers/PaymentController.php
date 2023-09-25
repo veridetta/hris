@@ -15,6 +15,7 @@ use Barryvdh\DomPDF\PDF;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Barryvdh\Snappy\PdfWrapper;
 use Carbon\Carbon;
+use Exception;
 
 class PaymentController extends Controller
 {
@@ -75,9 +76,10 @@ class PaymentController extends Controller
      */
     public function show(Request $request)
     {
-        $employee=Employee::select('employees.id','employees.name','jabatans.jabatan','salaries.salary','salaries.insentif')->join('jabatans', '.jabatans.id', '=', 'employees.jabatans_id')->join('salaries','salaries.jabatan_id','=','jabatans.id')->get();
+        $employee=Employee::select('employees.id','employees.name','jabatans.jabatan','salaries.salary','salaries.makan','salaries.transport')->join('jabatans', 'jabatans.id', '=', 'employees.jabatans_id')->join('salaries','salaries.jabatan_id','=','jabatans.id')->get();
         $bulan=$request->month;
         $tahun=$request->year;
+        
         return view('layouts.payments.index',['employees'=>$employee,'bulan'=>$bulan,'tahun'=>$tahun]);
     }
 
@@ -120,19 +122,46 @@ class PaymentController extends Controller
     public function detail(PaymentsDataTable $dataTable, Request $request){
         $id=$request->id;
         $month=$request->month;
-        $year=$request->year;
-        return $dataTable->with('id',$id)->with('month',$month)->with('year',$year)->render('layouts.payments.detail');
+        //rev 02-01-2023
+        if($month<2){
+            $year_from=$request->year-1;
+            $year_to=$request->year;
+        }else{
+            $year_from=$request->year;
+            $year_to=$request->year;
+        }
+        $prev_month = date("m", strtotime("2017-" . $month . "-01" . " -1 month"));;
+        $from_mentah = $year_from.'-'.$prev_month.'-21';
+        $to_mentah = $year_to.'-'.$month.'-20';
+        //endd
+        $from = date($from_mentah);
+        $to = date($to_mentah);
+        return $dataTable->with('id',$id)->with('from',$from)->with('to',$to)->render('layouts.payments.detail');
     }
     public function generate_payments(Request $request){
         $id=$request->id;
-        $month=$request->month;
-        $year=$request->year;
         $employee=Employee::where('id','=',$id)->first();
         $total_lembur=0;
         $total_telat=0;
         $total_absen=0;
         $total_masuk=0;
-        $attendance = Attendance::whereMonth('created_at',$month)->whereYear('created_at',$year)->where('employees_id','=',$id)->get();
+        $month=$request->month;
+        $year=$request->year;
+       //rev 02-01-2023
+        if($month<2){
+            $year_from=$request->year-1;
+            $year_to=$request->year;
+        }else{
+            $year_from=$request->year;
+            $year_to=$request->year;
+        }
+        $prev_month = date("m", strtotime("2017-" . $month . "-01" . " -1 month"));;
+        $from_mentah = $year_from.'-'.$prev_month.'-21';
+        $to_mentah = $year_to.'-'.$month.'-20';
+        //endd
+        $from = date($from_mentah);
+        $to = date($to_mentah);
+        $attendance = Attendance::whereBetween('created_at', [$from, $to])->where('employees_id','=',$id)->get();
             foreach($attendance as $attendances){
                 switch ($attendances->status){
                     case "Belum Masuk":
@@ -156,9 +185,11 @@ class PaymentController extends Controller
             }
             $jabatan=Salary::where('jabatan_id','=',$employee->jabatans_id)->first();
             $gaji=$jabatan->salary;
+            $makan = ($attendance->count()*$jabatan->makan)-($total_telat*$jabatan->makan)-($total_absen*$jabatan->makan);
+            $transport = ($attendance->count()*$jabatan->transport)-($total_telat*$jabatan->transport)-($total_absen*$jabatan->transport);
             $fee_lembur=$total_lembur*$jabatan->lembur;
-            $fee_telat=$total_telat*$jabatan->potongan;
-            $total_gaji=$gaji+$fee_lembur+$jabatan->insentif-$fee_telat;
+            $fee_telat=$jabatan->potongan;
+            $total_gaji=$gaji+$fee_lembur+$jabatan->insentif+$makan+$transport-$fee_telat;
             //Create or update database
             $employee=Payment::updateOrCreate([
                 'employees_id' => $id,
@@ -169,6 +200,8 @@ class PaymentController extends Controller
                 'month' => $month,
                 'year' => $year,
                 'lembur' => $fee_lembur,
+                'makan' => $makan,
+                'transport' => $transport,
                 'telat' => $total_telat,
                 'tidak_masuk' => $total_absen,
                 'potongan' => $fee_telat,
@@ -177,5 +210,38 @@ class PaymentController extends Controller
             return response()->json(['status'=>'success','message'=>'Berhasil melakukan validasi','title'=>'Berhasil']);
             //lalu return ke gaji
     }
-    
+    public static function convert($number)
+    {
+        $number = str_replace('.', '', $number);
+        if ( ! is_numeric($number)) throw new Exception("Please input number.");
+        $base    = array('nol', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan');
+        $numeric = array('1000000000000000', '1000000000000', '1000000000000', 1000000000, 1000000, 1000, 100, 10, 1);
+        $unit    = array('kuadriliun', 'triliun', 'biliun', 'milyar', 'juta', 'ribu', 'ratus', 'puluh', '');
+        $str     = null;
+        $i = 0;
+        if ($number == 0) {
+            $str = 'nol';
+        } else {
+            while ($number != 0) {
+                $count = (int)($number / $numeric[$i]);
+                if ($count >= 10) {
+                    $str .= static::convert($count) . ' ' . $unit[$i] . ' ';
+                } elseif ($count > 0 && $count < 10) {
+                    $str .= $base[$count] . ' ' . $unit[$i] . ' ';
+                }
+                $number -= $numeric[$i] * $count;
+                $i++;
+            }
+            $str = preg_replace('/satu puluh (\w+)/i', '\1 belas', $str);
+            $str = preg_replace('/satu (ribu|ratus|puluh|belas)/', 'se\1', $str);
+            $str = preg_replace('/\s{2,}/', ' ', trim($str));
+        }
+        return $str;
+    }
+    public function delete(Request $request)
+    {
+        $company = Payment::where('id',$request->id)->delete();
+      
+        return Response()->json($company);
+    }
 }

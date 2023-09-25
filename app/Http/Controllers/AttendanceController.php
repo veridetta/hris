@@ -154,7 +154,7 @@ class AttendanceController extends Controller
             if(!count($schedule)){
                 $status="Jadwal tidak sesuai";
                 $response="error";
-                $pesan=$employee->name."\n Tidak Berhasil absen masuk, Tidak ada jadwal ";
+                $pesan=$employee[0]->name."\n Tidak Berhasil absen masuk, Tidak ada jadwal ";
             }else{
                 $shift = Shift::where('id',$schedule[0]->shifts_id)->first();
                 $dt = Carbon::now()->format("H:i:s");
@@ -196,13 +196,13 @@ class AttendanceController extends Controller
                     if($dt>$masuk){
                         if($dt<$telat){
                             $diff_in_minutes = Carbon::parse($masuk)->diffInMinutes($dt);
-                            $status="Terlambat";
-                            $response="warning";
-                            $pesan=$employee[0]->name."\n Berhasil absen masuk pada pukul ".$dt."\n Anda terlambat ".$diff_in_minutes." menit";
+                            $status="Masuk";
+                            $response="success";
+                            $pesan=$employee[0]->name."\n Berhasil absen masuk pada pukul ".$dt;
                         }else{
                             $input=false;
                             $diff_in_minutes = Carbon::parse($masuk)->diffInMinutes($dt);
-                            $status="Sangat Terlambat";
+                            $status="Terlambat";
                             $response="error";
                             $pesan=$employee[0]->name."\n Tidak Berhasil absen masuk pada pukul ".$dt."\n Anda terlambat ".$diff_in_minutes." menit";
                         }
@@ -217,7 +217,7 @@ class AttendanceController extends Controller
                             $diff_in_minutes = Carbon::parse($masuk)->diffInMinutes($dt);
                             $status="Jadwal tidak sesuai";
                             $response="error";
-                            $pesan=$employee[0]->name."\n Tidak Berhasil absen masuk, jadwal tidak sesuai ".$masuk." sekarang ".$waktu;
+                            $pesan=$employee[0]->name."\n Tidak Berhasil absen masuk, jadwal tidak sesuai ".$masuk." sekarang ".$dt;
                     }
                     if($input){
                         $attendance = Attendance::where('employees_id',$employee[0]->id)->where('schedules_id', $schedule[0]->id)->update(['at_in'=>$dt,'status'=>$status,'lembur'=>0]);
@@ -238,7 +238,18 @@ class AttendanceController extends Controller
         $id=$request->id;
         $month=$request->month;
         $year=$request->year;
-        return $dataTable->with('id',$id)->with('month',$month)->with('year',$year)->render('history');
+        $prev_month = date("m", strtotime("2017-" . $month . "-01" . " -1 month"));;
+        $from_mentah = $year.'-'.$prev_month.'-21';
+        $to_mentah = $year.'-'.$month.'-20';
+        $from = date($from_mentah);
+        $to = date($to_mentah);
+        return $dataTable->with('id',$id)->with('from',$from)->with('to',$to)->render('history');
+    }
+    public function delete(Request $request)
+    {
+        $company = Attendance::where('id',$request->id)->delete();
+      
+        return Response()->json($company);
     }
 }
 

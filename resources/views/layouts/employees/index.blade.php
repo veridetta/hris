@@ -129,6 +129,7 @@
         url_ajax="{{ url('employee_edit') }}";
         $('#id').val(res.id);
         $('#name').val(res.name);
+        $('#jabatan').val(res.jabatans_id);
         $('#rfid').val(res.rfid);
         $('#ttl').val(res.ttl);
         $('#jk').val(res.jk);

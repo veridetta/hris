@@ -43,14 +43,14 @@
                             <div class="col-6">
                               <div class="mb-3 ">
                                 <div class="col-12">
-                                  <img src="{{ asset('images/'.$company->logo) }}" alt="" title="" width="80" height="80"/>
+                                  <img src="//files.segarsehatgorontalo.com/public/images/{{$company->logo}}" alt="" title="" width="80" height="80"/>
                                 </div>
                                 <label for="logo" class="form-label">Logo Perusahaan:</label>
                                 <input type="file" id="logo" name="logo" class="form-control" placeholder="Logo" required="">
                               </div>
                               <div class="mb-3 ">
                                 <div class="col-12">
-                                  <img src="{{ asset('images/'.$company->ttd) }}" alt="" title="" width="80" height="80"/>
+                                  <img src="//files.segarsehatgorontalo.com/public/images/{{ $company->ttd}}" alt="" title="" width="80" height="80"/>
                                 </div>
                                 <label for="ttd" class="form-label">Scan TTD:</label>
                                 <input type="file" id="ttd" name="ttd" class="form-control" placeholder="TTD" required="">

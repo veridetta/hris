@@ -36,7 +36,7 @@ class AttendanceTodayDataTable extends DataTable
     public function query(Attendance $model)
     {
         $now = Carbon::now();
-        $data = Employee::select('schedules.id','employees.name','shifts.shift_name','attendances.at_in','attendances.at_out','attendances.lembur','attendances.status')->whereDate('schedules.dates', Carbon::today())->join('schedules', '.schedules.employees_id', '=', 'employees.id')->join('shifts','shifts.id','=','schedules.shifts_id')->join('attendances','attendances.schedules_id','=','schedules.id');
+        $data = Employee::select('schedules.id','employees.name','shifts.shift_name','attendances.at_in','attendances.at_out','attendances.lembur','attendances.status')->whereDate('schedules.dates', Carbon::today())->join('schedules', 'schedules.employees_id', '=', 'employees.id')->join('shifts','shifts.id','=','schedules.shifts_id')->join('attendances','attendances.schedules_id','=','schedules.id');
         return $this->applyScopes($data);
     }
 

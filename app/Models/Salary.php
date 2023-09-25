@@ -14,7 +14,8 @@ class Salary extends Model
     protected $fillable = [
         'jabatan_id',
         'salary',
-        'insentif',
+        'makan',
+        'transport',
         'lembur',
         'potongan',
     ];

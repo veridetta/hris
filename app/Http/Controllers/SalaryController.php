@@ -48,7 +48,8 @@ class SalaryController extends Controller
         $validator = Validator::make($request->all(), [
             'jabatan' => 'required',
             'salary' => 'required',
-            'insentif' => 'required',
+            'makan' => 'required',
+            'transport' => 'required',
             'lembur' => 'required',
             'potongan' => 'required',
         ]);
@@ -64,7 +65,8 @@ class SalaryController extends Controller
            ],[
             'jabatan_id' => $request->jabatan,
             'salary' => $request->salary,
-            'insentif' => $request->insentif,
+            'makan' => $request->makan,
+            'transport' => $request->transport,
             'lembur' => $request->lembur,
             'potongan' => $request->potongan,
         ]);

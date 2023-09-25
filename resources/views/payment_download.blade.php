@@ -10,11 +10,11 @@
     use Carbon\Carbon;
     $payment=Payment::where('employees_id','=',request()->id)->where('month','=',request()->month)->where('year','=',request()->year)->first();
     $setting=Setting::first();
-    $employee=Employee::select('employees.name','jabatans.jabatan','salaries.salary','salaries.insentif')->where('employees.id','=',request()->id)->join('jabatans','jabatans.id','=','employees.jabatans_id')->join('salaries','salaries.jabatan_id','=','jabatans.id')->first();
+    $employee=Employee::select('employees.name','jabatans.jabatan','salaries.salary','salaries.makan','salaries.transport')->where('employees.id','=',request()->id)->join('jabatans','jabatans.id','=','employees.jabatans_id')->join('salaries','salaries.jabatan_id','=','jabatans.id')->first();
     ?>
     <table width="100%">
         <tr>
-            <td style="width:100px;"><img src="{{ asset('images/'.$setting->logo) }}" style="max-width:100px;"/></td>
+            <td style="width:100px;"><img src="//files.segarsehatgorontalo.com/public/images/{{$setting->logo}}" style="max-width:100px;"/></td>
             <td style="padding-left:10px;"> <p style="text-transform:uppercase"><strong><span style="font-size:18px">{{$setting->company}}</span></strong></p>
                 <p style="">{{$setting->address}}</p></td>
         </tr>
@@ -38,56 +38,74 @@
 		</tr>
 	</tbody>
 </table>
-
-<p>&nbsp;</p>
-
+<br>
 <table border="0" cellpadding="1" cellspacing="1" style="width:100%">
 	<tbody>
 		<tr>
-			<td style="width:125px"><strong>PENGHASILAN</strong></td>
-			<td style="width:439px">&nbsp;</td>
-			<td style="width:200px"><strong>POTONGAN</strong></td>
-			<td style="width:254px">&nbsp;</td>
+			<td style="width:35%"><hr><strong>PENDAPATAN</strong><hr></td>
+			<td style="width:15%"><hr>&nbsp;<hr></td>
+			<td style="width:35%"><hr><strong>POTONGAN</strong><hr></td>
+			<td style="width:15%"><hr>&nbsp;<hr></td>
 		</tr>
 		<tr>
-			<td style="width:125px">Gaji Pokok</td>
-			<td style="width:439px">@currency($employee->salary)</td>
-			<td style="width:200px">Terlambat / Ketidakhadiran</td>
-			<td style="width:254px">@currency($payment->potongan)</td>
+			<td style="width:35%">GAJI POKOK</td>
+			<td style="width:15%">@currency($employee->salary)</td>
+			<td style="width:35%">BPJS KESEHATAN</td>
+			<td style="width:15%">@currency($payment->potongan)</td>
 		</tr>
 		<tr>
-			<td style="width:125px">Insentif</td>
-			<td style="width:439px">@currency($employee->insentif)</td>
-			<td style="width:200px">&nbsp;</td>
-			<td style="width:254px">&nbsp;</td>
+			<td style="width:35%">TUNJANGAN MAKAN</td>
+			<td style="width:15%">@currency($payment->makan)</td>
+			<td style="width:15%">BPJS KETENAGAKERJAAN</td>
+			<td style="width:35%">&nbsp;</td>
 		</tr>
 		<tr>
-			<td style="width:125px">Lembur</td>
-			<td style="width:439px">@currency($payment->lembur)</td>
-			<td style="width:200px">&nbsp;</td>
-			<td style="width:254px">&nbsp;</td>
+			<td style="width:35%">TUNJANGAN TRANSPORT</td>
+			<td style="width:15%">@currency($payment->transport)</td>
+			<td style="width:15%">&nbsp;</td>
+			<td style="width:35%">&nbsp;</td>
 		</tr>
 		<tr>
-			<td style="width:125px"><strong>TOTAL A</strong></td>
-			<td style="width:439px">@currency($payment->lembur+$employee->insentif+$employee->salary)</td>
-			<td style="width:200px"><strong>TOTAL B</strong></td>
-			<td style="width:254px">@currency($payment->potongan)</td>
+			<td style="width:35%">TUNJANGAN LAIN-LAIN</td>
+			<td style="width:15%"></td>
+			<td style="width:15%">&nbsp;</td>
+			<td style="width:35%">&nbsp;</td>
+		</tr>
+		<tr>
+			<td style="width:35%">LEMBUR</td>
+			<td style="width:15%">@currency($payment->lembur)</td>
+			<td style="width:15%">&nbsp;</td>
+			<td style="width:35%">&nbsp;</td>
+		</tr>
+		<tr>
+			<td style="width:35%">THR</td>
+			<td style="width:15%"></td>
+			<td style="width:15%">&nbsp;</td>
+			<td style="width:35%">&nbsp;</td>
+		</tr>
+		<tr>
+			<td style="width:35%"><hr><strong>JUMLAH PENDAPATAN</strong><hr></td>
+			<td style="width:15%"><hr>@currency($payment->lembur+$payment->makan+$payment->transport+$employee->salary)<hr></td>
+			<td style="width:15%"><hr><strong>JUMLAH POTONGAN</strong><hr></td>
+			<td style="width:35%"><hr>@currency($payment->potongan)<hr></td>
 		</tr>
 	</tbody>
 </table>
-
-<p>&nbsp;</p>
-
+<br>
 <table border="0" cellpadding="1" cellspacing="1" style="width:100%">
 	<tbody>
 		<tr>
-			<td><strong>PENERIMAAN BERSIH = @currency($payment->payment)</strong></td>
+			<td><strong>GAJI BERSIH = @currency($payment->payment)</strong></td>
+		</tr>
+		@php
+			$terbilang = App\Http\Controllers\PaymentController::convert($payment->payment);
+		@endphp
+			<td >TERBILANG = <span style="text-transform: capitalize">{{$terbilang}}</span></td>
+		<tr>
 		</tr>
 	</tbody>
 </table>
-
-<p>&nbsp;</p>
-
+<br>
 <table border="0" cellpadding="1" cellspacing="1" style="width:100%">
 	<tbody>
 		<tr>
@@ -96,7 +114,7 @@
 		</tr>
 		<tr>
 			<td style="width:740px">&nbsp;</td>
-			<td style="width:412px;"><img src="{{ asset('images/'.$setting->ttd) }}" style="max-width:200px;min-height:60px"/>
+			<td style="width:412px;"><img src="//files.segarsehatgorontalo.com/public/images/{{$setting->ttd}}" style="max-width:120px;min-height:60px;max-height:153px;"/>
 			</td>
 		</tr>
 		<tr>
@@ -105,14 +123,10 @@
 		</tr>
 		<tr>
 			<td style="width:740px">&nbsp;</td>
-			<td style="width:412px">{{'Manajer '.$setting->company}}</td>
+			<td style="width:412px">{{'Direktur '.$setting->company}}</td>
 		</tr>
 	</tbody>
 </table>
-
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>

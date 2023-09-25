@@ -5,8 +5,6 @@ namespace App\DataTables;
 use App\Models\Attendance;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
 class AttendanceDataTable extends DataTable
@@ -20,8 +18,7 @@ class AttendanceDataTable extends DataTable
     public function dataTable($query)
     {
         return datatables()
-            ->eloquent($query)
-            ->addColumn('action', 'layouts.attendances.action');
+            ->eloquent($query);
     }
 
     /**
@@ -32,7 +29,7 @@ class AttendanceDataTable extends DataTable
      */
     public function query(Attendance $model)
     {
-        $data = Attendance::select()->join('employees', 'employees.id', '=', 'attendances.employees_id')->join('schedules', 'schedules.id', '=', 'attendances.schedules_id')->where('status','!=','Belum Masuk') ;
+        $data = Attendance::select('employees.id AS id','employees.name as employees.name','schedules.dates as dates','shifts.in as in','shifts.out as out','attendances.at_in as at_in','attendances.at_out as at_out','attendances.lembur as lembur')->join('employees', 'employees.id', '=', 'attendances.employees_id')->join('schedules', 'schedules.id', '=', 'attendances.schedules_id')->join('shifts','shifts.id','=','schedules.shifts_id')->where('status','!=','Belum Masuk') ;
         return $this->applyScopes($data);
     }
 
@@ -66,17 +63,24 @@ class AttendanceDataTable extends DataTable
     {
         return [
             
-            Column::make('id'),
-            Column::make('dates'),
-            Column::make('at_in'),
-            Column::make('at_out'),
-            Column::make('at_out'),
-            Column::make('lembur'),
-            Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
+            Column::make('id')
+              ->title('Id')
+            ->searchable(false),
+            Column::make('employees.name')
+              ->title('Nama')
+              ->searchable(true),
+            Column::make('dates')
+              ->title('Tanggal')
+        ->searchable(false),
+            Column::make('at_in')
+              ->title('Absen Masuk')
+            ->searchable(false),
+            Column::make('at_out')  
+            ->title('Absen Keluar')
+        ->searchable(false),
+            Column::make('lembur')
+              ->title('Lembur')
+        ->searchable(false),
         ];
     }
 

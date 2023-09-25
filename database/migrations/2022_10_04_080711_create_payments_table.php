@@ -21,6 +21,8 @@ return new class extends Migration
             $table->integer('lembur');
             $table->integer('telat');
             $table->integer('tidak_masuk');
+            $table->integer('makan');
+            $table->integer('transport');
             $table->integer('potongan');
             $table->integer('payment');
             $table->timestamps();
